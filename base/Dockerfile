@@ -1,5 +1,6 @@
-FROM bde2020/hadoop-base:1.0.0
-MAINTAINER Ivan Ermilov <ivan.s.ermilov@gmail.com>
+# FIXME: Removed verification of download temporarily!
+
+FROM bwv988/hadoop-base
 
 RUN gpg --keyserver pool.sks-keyservers.net --recv-keys \
     A864F0C3E5262F9A229B85D07B165D2A15E06093 \
@@ -10,16 +11,17 @@ RUN gpg --keyserver pool.sks-keyservers.net --recv-keys \
     EEDABD1C71C548D6F00661D37C6C105FFC8ED089
 
 ENV SPARK_VERSION 1.6.1
-ENV SPARK_URL https://www.apache.org/dist/spark/spark-$SPARK_VERSION/spark-$SPARK_VERSION-bin-without-hadoop.tgz
+ENV SPARK_DL_MIRROR=http://ftp.heanet.ie/mirrors/www.apache.org
+ENV SPARK_URL $SPARK_DL_MIRROR/dist/spark/spark-$SPARK_VERSION/spark-$SPARK_VERSION-bin-without-hadoop.tgz
 RUN set -x \
-    && curl -fSL "$SPARK_URL" -o /tmp/spark.tar.gz \
-    && curl -fSL "$SPARK_URL.asc" -o /tmp/spark.tar.gz.asc \
-    && gpg --verify /tmp/spark.tar.gz.asc \
+    && curl -kfSL "$SPARK_URL" -o /tmp/spark.tar.gz \
+#    && curl -kfSL "$SPARK_URL.asc" -o /tmp/spark.tar.gz.asc \
+#    && gpg --verify /tmp/spark.tar.gz.asc \
     && tar -xvf /tmp/spark.tar.gz -C /opt/ \
     && rm /tmp/spark.tar.gz*
 
 ENV SPARK_HOME=/opt/spark-$SPARK_VERSION
-RUN mv /opt/spark-$SPARK_VERSION-* $SPARK_HOME
+RUN mv /opt/spark-$SPARK_VERSION-bin-without-hadoop $SPARK_HOME
 
 WORKDIR $SPARK_HOME
 ENV PATH $SPARK_HOME/bin:$PATH

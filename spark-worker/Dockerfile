@@ -1,4 +1,4 @@
-FROM earthquakesan/hadoop-spark:1.0.0
+FROM bwv988/hadoop-spark
 MAINTAINER Ivan Ermilov <ivan.s.ermilov@gmail.com>
 
 ADD spark-worker-entrypoint.sh /spark-worker-entrypoint.sh

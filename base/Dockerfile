@@ -32,6 +32,9 @@ RUN chmod a+x /spark-entrypoint.sh
 ADD runhistoryserver.sh /
 RUN chmod a+x /runhistoryserver.sh
 
+# Use hive-site.xml from Hive container.
+ADD hive-site.xml $SPARK_HOME/conf/hive-site.xml
+
 RUN echo "export SPARK_DIST_CLASSPATH=$(hadoop classpath)" >> /opt/spark-$SPARK_VERSION/conf/spark-env.sh
 
 ENTRYPOINT ["/spark-entrypoint.sh"]

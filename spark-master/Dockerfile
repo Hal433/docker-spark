@@ -1,3 +1,5 @@
+# Dockerfile for Spark Master.
+
 FROM bwv988/hadoop-spark
 
 ADD spark-master-entrypoint.sh /spark-master-entrypoint.sh

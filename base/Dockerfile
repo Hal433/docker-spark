@@ -1,4 +1,7 @@
+# Base docker file for Apache Spark containers.
 # FIXME: Removed verification of download temporarily!
+# FIXME: Hard-coded Irish Apache mirror, but should use cloud-based one.
+# FIXME: Should link hive-site.xml from Hive container, instead of copying it.
 
 FROM bwv988/hadoop-base
 
@@ -26,14 +29,14 @@ RUN mv /opt/spark-$SPARK_VERSION-bin-without-hadoop $SPARK_HOME
 WORKDIR $SPARK_HOME
 ENV PATH $SPARK_HOME/bin:$PATH
 
-ADD spark-entrypoint.sh /
+COPY spark-entrypoint.sh /
 RUN chmod a+x /spark-entrypoint.sh
 
-ADD runhistoryserver.sh /
+COPY runhistoryserver.sh /
 RUN chmod a+x /runhistoryserver.sh
 
 # Use hive-site.xml from Hive container.
-ADD hive-site.xml $SPARK_HOME/conf/hive-site.xml
+COPY hive-site.xml $SPARK_HOME/conf/hive-site.xml
 
 RUN echo "export SPARK_DIST_CLASSPATH=$(hadoop classpath)" >> /opt/spark-$SPARK_VERSION/conf/spark-env.sh
 

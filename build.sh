@@ -1,12 +1,23 @@
 #!/bin/bash
 
-echo -e "Building Spark docker images..."
+echo -e "Building Spark docker images."
+
+function build_img() {
+  local prefix=$1
+  local imgname=$2
+  local img="${prefix}/${imgname}"
+
+  echo -e "Building docker image ${img}..."
+  docker build -t $img .
+}
+
+IMGPREFIX=analytics
 
 cd base
-docker build -t bwv988/hadoop-spark .
+build_img $IMGPREFIX hadoop-spark
 
 cd ../spark-master
-docker build -t bwv988/hadoop-spark-master .
+build_img $IMGPREFIX hadoop-spark-master
 
 cd ../spark-worker
-docker build -t bwv988/hadoop-spark-worker .
+build_img $IMGPREFIX hadoop-spark-worker

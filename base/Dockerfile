@@ -3,7 +3,7 @@
 # FIXME: Hard-coded Irish Apache mirror, but should use cloud-based one.
 # FIXME: Should link hive-site.xml from Hive container, instead of copying it.
 
-FROM bwv988/hadoop-base
+FROM analytics/hadoop-base
 
 RUN gpg --keyserver pool.sks-keyservers.net --recv-keys \
     A864F0C3E5262F9A229B85D07B165D2A15E06093 \
@@ -13,7 +13,7 @@ RUN gpg --keyserver pool.sks-keyservers.net --recv-keys \
     5AA90E72812FF2467904277D548F5FEE9E4FE3AF \
     EEDABD1C71C548D6F00661D37C6C105FFC8ED089
 
-ENV SPARK_VERSION 1.6.1
+ENV SPARK_VERSION 1.6.2
 ENV SPARK_DL_MIRROR=http://ftp.heanet.ie/mirrors/www.apache.org
 ENV SPARK_URL $SPARK_DL_MIRROR/dist/spark/spark-$SPARK_VERSION/spark-$SPARK_VERSION-bin-without-hadoop.tgz
 RUN set -x \
@@ -29,8 +29,8 @@ RUN mv /opt/spark-$SPARK_VERSION-bin-without-hadoop $SPARK_HOME
 WORKDIR $SPARK_HOME
 ENV PATH $SPARK_HOME/bin:$PATH
 
-COPY spark-entrypoint.sh /
-RUN chmod a+x /spark-entrypoint.sh
+COPY spark-entrypoint.sh /entrypoints/spark-entrypoint.sh
+RUN chmod a+x /entrypoints/spark-entrypoint.sh
 
 COPY runhistoryserver.sh /
 RUN chmod a+x /runhistoryserver.sh
@@ -40,5 +40,5 @@ COPY hive-site.xml $SPARK_HOME/conf/hive-site.xml
 
 RUN echo "export SPARK_DIST_CLASSPATH=$(hadoop classpath)" >> /opt/spark-$SPARK_VERSION/conf/spark-env.sh
 
-ENTRYPOINT ["/spark-entrypoint.sh"]
+ENTRYPOINT ["/entrypoints/spark-entrypoint.sh"]
 CMD ["/runhistoryserver.sh"]

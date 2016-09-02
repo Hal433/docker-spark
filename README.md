@@ -1,17 +1,11 @@
 # Docker images for Apache Spark
 
-## Introduction
+## About
 
-## Usage examples
+Debian Jessie-based docker images for Apache Spark.
 
-Create event log directory in HDFS.
+Check out <https://github.com/bwv988/datascience-docker-sandbox> for usage examples.
 
-```bash
-./hadoop.sh fs -mkdir /spark-logs
-```
+## Version
 
-Execute Spark Shell.
-
-```bash
-docker exec -it spark-master spark-shell --master spark://spark-master:7077
-```
+Apache Spark 2.0.0
